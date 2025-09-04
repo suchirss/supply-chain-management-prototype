@@ -12,25 +12,28 @@ print(db_file)
 # Orders Table CRUD 
 
 # function to Connect, Execute query, Close (CEC) cursor
-def CEC_cursor(query_to_execute):
+def CEC_cursor(query_to_execute, retrieve=False):
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
     cursor.execute(query_to_execute)
+    if retrieve == True:
+        returned_string = cursor.fetchall()
     conn.commit()
     conn.close()
+
+    if retrieve == True:
+        return returned_string
+
 
 def create_order(client_name, product_name, SKU, quantity, status):
     insert_order_query = f"""
         INSERT INTO orders (client_name, order_name, SKU, quantity, status)
         VALUES ('{client_name}', '{product_name}', {SKU}, '{quantity}', '{status}')
     """
-    conn = sqlite3.connect(db_file)
-    cursor = conn.cursor()
-    cursor.execute(insert_order_query)
-    conn.commit()
-    conn.close()
 
-create_order("TestClient", "TestProduct", "2999", 40, "TestStatus")    
+    CEC_cursor(insert_order_query)
+
+# create_order("TestClient", "TestProduct", "2999", 40, "TestStatus")    
 
 def retrieve_order(table_name, *args):
     select_string = []
@@ -48,15 +51,11 @@ def retrieve_order(table_name, *args):
         SELECT {select_string} FROM {table_name}
     """
 
-    
-    conn = sqlite3.connect(db_file)
-    cursor = conn.cursor()
-    cursor.execute(retrieve_order_query)
-    retrieved_string = cursor.fetchall()
-    conn.commit()   
-    conn.close()
+    retrieved_string = CEC_cursor(retrieve_order_query, retrieve=True)
 
     return retrieved_string
+
+# print(retrieve_order("orders"))
 
 def update_order(where_clause='', **kwargs):
     if not kwargs:
@@ -75,25 +74,15 @@ def update_order(where_clause='', **kwargs):
         WHERE {where_clause}
     """
 
-    # print(update_order_query)
+    CEC_cursor(update_order_query)
 
-    conn = sqlite3.connect(db_file)
-    cursor = conn.cursor()
-    cursor.execute(update_order_query)
-    conn.commit()
-    conn.close()
-
-update_order(where_clause="order_id = 2", client_name="test_client", order_name="test_name")
+# update_order(where_clause="order_id = 4", client_name="xyz", order_name="xyz")
 
 def delete_order(order_id):
     remove_order_query = f"""
         DELETE FROM orders WHERE order_id={order_id}
     """     
-    conn = sqlite3.connect(db_file)
-    cursor = conn.cursor()
-    cursor.execute(remove_order_query)
-    conn.commit()
-    conn.close()
+    CEC_cursor(remove_order_query)
 
-# delete_order(4)
+delete_order(8)
 
