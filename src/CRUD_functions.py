@@ -7,7 +7,7 @@ parent_dir = os.path.dirname(current_dir)
 db_dir_name = "db"
 db_name = "supply_chain.db"
 db_file = os.path.join(parent_dir, db_dir_name, db_name)
-print(db_file)
+# print(db_file)
 
 # Orders Table CRUD 
 
@@ -55,7 +55,7 @@ def retrieve_order(table_name, *args):
 
     return retrieved_string
 
-# print(retrieve_order("orders"))
+print(retrieve_order("orders", "order_name"))
 
 def update_order(where_clause='', **kwargs):
     if not kwargs:
@@ -84,5 +84,5 @@ def delete_order(order_id):
     """     
     CEC_cursor(remove_order_query)
 
-delete_order(8)
+# delete_order(8)
 
