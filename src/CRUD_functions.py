@@ -55,7 +55,7 @@ def retrieve_order(table_name, *args):
 
     return retrieved_string
 
-print(retrieve_order("orders", "order_name"))
+# print(retrieve_order("orders", "order_name"))
 
 def update_order(where_clause='', **kwargs):
     if not kwargs:
